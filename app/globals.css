@@ -1,26 +1,80 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Paleta extraída del mockup references/pantallas/feed.dc.html */
+@theme {
+  /* Superficies */
+  --color-page: #f6ecdf;
+  --color-surface: #fffdf9;
+  --color-surface-sunken: #f4ece1;
+
+  /* Bordes y líneas */
+  --color-border: #ece0d0;
+  --color-border-soft: #f0e6d8;
+  --color-border-subtle: #e7dac8;
+
+  /* Texto */
+  --color-foreground: #3f362e;
+  --color-body: #4a4038;
+  --color-muted: #a89a8b;
+  --color-muted-strong: #94887b;
+  --color-section: #8a7c6d;
+  --color-nav: #6e6359;
+
+  /* Coral — acento principal */
+  --color-coral: #e0654a;
+  --color-coral-strong: #c5503a;
+  --color-coral-deep: #d9583c;
+  --color-coral-bright: #f2937a;
+  --color-coral-soft: #fbe3d8;
+  --color-coral-from: #f4977e;
+  --color-coral-to: #ee8164;
+
+  /* Verde — badge "logro" */
+  --color-achievement: #3e9b6c;
+  --color-achievement-soft: #cfebd8;
+
+  /* Celeste — badge "actividad" */
+  --color-activity: #2e89a6;
+  --color-activity-soft: #c7e7f1;
+
+  /* Azul — badge "anuncio" */
+  --color-announcement: #4e72c8;
+  --color-announcement-soft: #ccd8f4;
+
+  /* Avatar de niño */
+  --color-child-avatar: #a9d9e8;
+  --color-child-avatar-ink: #1f7a93;
+
+  /* Placeholder de foto */
+  --color-photo-border: #dbcdba;
+  --color-photo-ink: #b0a290;
+
+  /* Scrollbar */
+  --color-scrollbar: #e4d6c4;
 }
 
+/*
+ * next/font inyecta --fredoka y --nunito sobre <html> (ver app/layout.tsx).
+ * @theme inline resuelve el var() en cada utilidad: en :root esas variables aún no existen.
+ */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-fredoka: var(--fredoka), ui-sans-serif, system-ui, sans-serif;
+  --font-nunito: var(--nunito), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--nunito), ui-sans-serif, system-ui, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-page);
+  color: var(--color-foreground);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-scrollbar);
+  border-radius: 8px;
+  border: 3px solid transparent;
+  background-clip: content-box;
 }
