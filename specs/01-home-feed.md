@@ -1,6 +1,6 @@
 # SPEC 01 — Home `/` (Feed) con data ficticia
 
-> **Status:** Aprobado
+> **Status:** Implementado
 > **Depends on:** —
 > **Date:** 2026-11-02
 > **Objective:** Construir el home `/` como réplica visual del mockup `references/pantallas/feed.dc.html` usando Tailwind CSS, data ficticia y sin funcionalidad real.
@@ -79,14 +79,14 @@ El mapeo vive en un diccionario constante en `lib/` (p. ej. `POST_KIND_LABELS: R
 
 ## Acceptance criteria
 
-- [ ] `npm run build` y `npx tsc --noEmit` terminan sin errores.
-- [ ] En desktop (≥768px) `/` muestra sidebar de 248px + columna central ≤760px, igual al mockup (colores, tipografía, radios, sombras, badges).
-- [ ] Los 3 posts aparecen con sus textos, badges y contadores exactos del mockup.
-- [ ] Fredoka y Nunito se cargan vía `next/font/google` (sin `<link>` manual).
-- [ ] A 375px no hay scroll horizontal; la sidebar está oculta y se ve el botón hamburguesa.
-- [ ] Tocar hamburguesa abre el drawer con overlay; tocar el overlay o un link lo cierra.
-- [ ] El item "Feed" aparece resaltado; los demás links no navegan a 404.
-- [ ] No hay llamadas a red ni lógica de estado: solo render estático con data de `lib/mockData.ts`.
+- [x] `npm run build` y `npx tsc --noEmit` terminan sin errores.
+- [x] En desktop (≥768px) `/` muestra sidebar de 248px + columna central ≤760px, igual al mockup (colores, tipografía, radios, sombras, badges).
+- [x] Los 3 posts aparecen con sus textos, badges y contadores exactos del mockup.
+- [x] Fredoka y Nunito se cargan vía `next/font/google` (sin `<link>` manual).
+- [x] A 375px no hay scroll horizontal; la sidebar está oculta y se ve el botón hamburguesa.
+- [x] Tocar hamburguesa abre el drawer con overlay; tocar el overlay o un link lo cierra.
+- [x] El item "Feed" aparece resaltado; los demás links no navegan a 404.
+- [x] No hay llamadas a red ni estado de datos: solo render estático con data de `lib/mockData.ts` (el único estado local es el `isOpen` del drawer móvil, exigido por el Scope).
 
 ## Decisions
 

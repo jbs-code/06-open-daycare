@@ -48,6 +48,10 @@ Two skills are installed from `klerith/fernando-skills` (`.agents/skills/`, hash
 
 Honor this flow for non-trivial features: spec first, then implement stepwise on the spec branch.
 
+## Spec verification agent
+
+`.opencode/agents/spec-verifier.md` defines the `spec-verifier` subagent: it verifies, fixes, and marks the `Acceptance criteria` checkboxes of a spec (`specs/NN-slug.md`). It validates build/tsc, checks Next.js recommendations via Context7, and verifies screens via Playwright (dev server + comparison against `references/pantallas/*.dc.html`). Launch it after implementing a spec: "Use el agente spec-verifier para verificar specs/NN-slug.md".
+
 ## Other MCPs
 - Context7 for seeking up-to-date documentation.
 
