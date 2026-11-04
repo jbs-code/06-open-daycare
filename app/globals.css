@@ -66,6 +66,8 @@
 body {
   background-color: var(--color-page);
   color: var(--color-foreground);
+  /* El mockup no fija line-height (usa `normal`); el preflight de Tailwind pone 1.5 */
+  line-height: normal;
 }
 
 ::-webkit-scrollbar {
