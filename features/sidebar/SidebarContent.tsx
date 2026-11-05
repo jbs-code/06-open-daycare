@@ -1,4 +1,8 @@
+"use client";
+
 import type { ComponentType } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   BellIcon,
   HomeIcon,
@@ -13,16 +17,22 @@ import type { CurrentUser } from "@/lib/mockData";
 interface NavItem {
   label: string;
   Icon: ComponentType<{ className?: string }>;
-  active?: boolean;
+  href: string;
 }
 
-// Las pantallas aún no existen → href="#" para no romper con 404 (SPEC 01)
+// Avisos y Mi cuenta aún no existen → href="#" para no romper con 404 (SPEC 01)
 const NAV_ITEMS: NavItem[] = [
-  { label: "Feed", Icon: HomeIcon, active: true },
-  { label: "Niños", Icon: UsersIcon },
-  { label: "Avisos", Icon: BellIcon },
-  { label: "Mi cuenta", Icon: UserIcon },
+  { label: "Feed", Icon: HomeIcon, href: "/" },
+  { label: "Niños", Icon: UsersIcon, href: "/kids" },
+  { label: "Avisos", Icon: BellIcon, href: "#" },
+  { label: "Mi cuenta", Icon: UserIcon, href: "#" },
 ];
+
+// "#" nunca está activo; "/" solo con match exacto; el resto cubre subrutas (/kids/...)
+function isActiveRoute(href: string, pathname: string): boolean {
+  if (href === "#") return false;
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 
 interface SidebarContentProps {
   user: CurrentUser;
@@ -31,6 +41,8 @@ interface SidebarContentProps {
 }
 
 export function SidebarContent({ user, onNavigate }: SidebarContentProps) {
+  const pathname = usePathname();
+
   return (
     <>
       <a href="#" onClick={onNavigate} className="flex items-center gap-[11px] px-2 pt-1 pb-[22px]">
@@ -57,21 +69,31 @@ export function SidebarContent({ user, onNavigate }: SidebarContentProps) {
       </a>
 
       <nav className="flex flex-1 flex-col gap-1">
-        {NAV_ITEMS.map(({ label, Icon, active }) => (
-          <a
-            key={label}
-            href="#"
-            onClick={onNavigate}
-            className={`flex items-center gap-3 rounded-xl px-3 py-[11px] text-[14.5px] ${
-              active
-                ? "bg-coral-soft font-extrabold text-coral-deep"
-                : "font-semibold text-nav"
-            }`}
-          >
-            <Icon className="size-[19px]" />
-            {label}
-          </a>
-        ))}
+        {NAV_ITEMS.map(({ label, Icon, href }) => {
+          const active = isActiveRoute(href, pathname);
+          const className = `flex items-center gap-3 rounded-xl px-3 py-[11px] text-[14.5px] ${
+            active
+              ? "bg-coral-soft font-extrabold text-coral-deep"
+              : "font-semibold text-nav"
+          }`;
+          const content = (
+            <>
+              <Icon className="size-[19px]" />
+              {label}
+            </>
+          );
+
+          // Rutas reales navegan en SPA; los placeholders siguen en <a>
+          return href === "#" ? (
+            <a key={label} href={href} onClick={onNavigate} className={className}>
+              {content}
+            </a>
+          ) : (
+            <Link key={label} href={href} onClick={onNavigate} className={className}>
+              {content}
+            </Link>
+          );
+        })}
       </nav>
 
       <div className="mt-2.5 border-t border-border pt-3.5">
