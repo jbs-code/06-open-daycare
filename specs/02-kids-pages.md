@@ -1,6 +1,6 @@
 # SPEC 02 — Pantallas Niños `/kids` y perfil `/kids/[slug]`
 
-> **Status:** Aprobado
+> **Status:** Implementado
 > **Depends on:** SPEC 01
 > **Date:** 2026-11-04
 > **Objective:** Construir las pantallas `/kids` y `/kids/[slug]` como réplicas visuales de `references/pantallas/ninos.dc.html` y `references/pantallas/perfil-nino.dc.html` con data ficticia, navegables desde el item "Niños" del sidebar.
@@ -98,18 +98,18 @@ Los 7 niños que no son Mateo llevan data completa inventada (fecha de nacimient
 
 ## Acceptance criteria
 
-- [ ] `npm run build` y `npx tsc --noEmit` terminan sin errores.
-- [ ] `/kids` en desktop replica `ninos.dc.html`: header "GESTIÓN/Niños" + "Agregar niño", buscador, label "SALA SOLES · 8 niños" con línea, y 8 tarjetas en 2 columnas con nombres, textos de subtítulo, colores de avatar y badges exactos del mockup.
-- [ ] Cada tarjeta de `/kids` navega a `/kids/{slug}` y al hover muestra borde `#F2A78E` y sube 2px.
-- [ ] `/kids/mateo-fernandez` replica `perfil-nino.dc.html`: "Volver a Niños", avatar 84px, "3 años · Sala Soles", "Editar", caja de alergias con su texto, tarjeta con Fecha de nacimiento `12 mar 2022` / Sala `Soles` / Ingreso `feb 2025`, y columna derecha con "Resumen del día" + "PADRES VINCULADOS" (Lucía ACTIVA, Diego PENDIENTE, "Vincular otro padre").
-- [ ] "Volver a Niños" lleva a `/kids`.
-- [ ] Los 8 slugs renderizan perfil; los 7 niños sin `allergies` no muestran la caja roja; Valentina muestra la tarjeta de padres vacía + "Vincular otro padre".
-- [ ] `/kids/pepe` devuelve 404 (`notFound()`).
-- [ ] En `/kids` y `/kids/{slug}` el item "Niños" del sidebar aparece resaltado; en `/` lo hace "Feed".
-- [ ] "Niños" navega a `/kids` y "Feed" a `/` tanto en la sidebar desktop como en el drawer móvil; "Avisos" y "Mi cuenta" siguen en `#` (sin 404).
-- [ ] El input de búsqueda está visible con su ícono y no filtra (inerte).
-- [ ] A 375px no hay scroll horizontal: la grilla baja a 1 columna y el drawer móvil sigue abriéndose/cerrando.
-- [ ] No hay llamadas a red ni estado de datos: render estático con `lib/children.ts` (el único estado local es el `isOpen` del drawer, heredado de SPEC 01).
+- [x] `npm run build` y `npx tsc --noEmit` terminan sin errores.
+- [x] `/kids` en desktop replica `ninos.dc.html`: header "GESTIÓN/Niños" + "Agregar niño", buscador, label "SALA SOLES · 8 niños" con línea, y 8 tarjetas en 2 columnas con nombres, textos de subtítulo, colores de avatar y badges exactos del mockup.
+- [x] Cada tarjeta de `/kids` navega a `/kids/{slug}` y al hover muestra borde `#F2A78E` y sube 2px.
+- [x] `/kids/mateo-fernandez` replica `perfil-nino.dc.html`: "Volver a Niños", avatar 84px, "3 años · Sala Soles", "Editar", caja de alergias con su texto, tarjeta con Fecha de nacimiento `12 mar 2022` / Sala `Soles` / Ingreso `feb 2025`, y columna derecha con "Resumen del día" + "PADRES VINCULADOS" (Lucía ACTIVA, Diego PENDIENTE, "Vincular otro padre").
+- [x] "Volver a Niños" lleva a `/kids`.
+- [x] Los 8 slugs renderizan perfil; los 7 niños sin `allergies` no muestran la caja roja; Valentina muestra la tarjeta de padres vacía + "Vincular otro padre".
+- [x] `/kids/pepe` devuelve 404 (`notFound()`).
+- [x] En `/kids` y `/kids/{slug}` el item "Niños" del sidebar aparece resaltado; en `/` lo hace "Feed".
+- [x] "Niños" navega a `/kids` y "Feed" a `/` tanto en la sidebar desktop como en el drawer móvil; "Avisos" y "Mi cuenta" siguen en `#` (sin 404).
+- [x] El input de búsqueda está visible con su ícono y no filtra (inerte).
+- [x] A 375px no hay scroll horizontal: la grilla baja a 1 columna y el drawer móvil sigue abriéndose/cerrando.
+- [x] No hay llamadas a red ni estado de datos: render estático con `lib/children.ts` (el único estado local es el `isOpen` del drawer, heredado de SPEC 01).
 
 ## Decisions
 
