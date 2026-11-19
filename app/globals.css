@@ -51,6 +51,14 @@
 
   /* Scrollbar */
   --color-scrollbar: #e4d6c4;
+
+  /* Autenticación — login y activación de cuenta */
+  --color-auth-page: #fbf4ec;
+  --color-field-border: #eadfd0;
+  --color-placeholder: #b6a99b;
+  --color-consent-bg: #fbf1d6;
+  --color-consent-ink: #8a7234;
+  --color-consent-check: #5fb97e;
 }
 
 /*
