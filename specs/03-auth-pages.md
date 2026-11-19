@@ -1,6 +1,6 @@
 # SPEC 03 — Pantallas de autenticación `/auth/login` y `/auth/activate-account`
 
-> **Status:** Aprobado
+> **Status:** Implementado
 > **Depends on:** SPEC 01
 > **Date:** 2026-11-18
 > **Objective:** Construir `/auth/login` y `/auth/activate-account` como réplicas visuales estáticas de `references/pantallas/login.dc.html` (sin el selector de rol de las líneas 47–57) y `references/pantallas/activar-cuenta.dc.html`, con adaptación a móvil y sin funcionalidad real.
@@ -44,17 +44,17 @@ Los campos precargados se escriben con `defaultValue` y el checkbox con `default
 
 ## Acceptance criteria
 
-- [ ] `npm run build` y `npx tsc --noEmit` terminan sin errores.
-- [ ] `/auth/login` y `/auth/activate-account` cargan sin 404 y no muestran la sidebar del feed.
-- [ ] `/auth/login` replica el mockup en desktop: panel coral con degradado, logo, titular, descripción, "🌿 Guardería Sala Soles", título "Iniciar sesión", subtítulo, labels `EMAIL`/`CONTRASEÑA`, placeholder de password `••••••••`, CTA gradiente y pie "¿Te invitó la guardería? Activá tu cuenta".
-- [ ] El input email de `/auth/login` aparece vacío con placeholder `tu@email.com`.
-- [ ] No existen en el DOM el label "INGRESO COMO" ni los botones "Personal"/"Familia" (omitidos según el pedido).
-- [ ] `/auth/activate-account` replica el mockup en desktop: "Bienvenida a OpenDayCare", texto de invitación, tarjeta con "M" / "Te invitaron a seguir a" / "Mateo · Sala Soles", código `7K4P9`, email `lucia.fernandez@gmail.com`, password enmascarado con valor `contraseña`, CTA "Activar mi cuenta" y pie "¿Ya tenés cuenta? Iniciar sesión".
-- [ ] El checkbox de autorización aparece marcado y con el texto exacto del mockup.
-- [ ] Todos los `<a>` de ambas pantallas tienen `href="#"` y no hay handlers de navegación ni de envío.
-- [ ] No hay `useState`, `onSubmit`, `fetch` ni peticiones de red en `features/auth/` ni en las rutas `/auth`.
-- [ ] No hay `<link>` manual a Google Fonts: Fredoka y Nunito siguen cargándose desde `app/layout.tsx`.
-- [ ] A 375px no hay scroll horizontal: en login el panel coral va arriba del formulario y en activate-account el contenido queda centrado.
+- [x] `npm run build` y `npx tsc --noEmit` terminan sin errores.
+- [x] `/auth/login` y `/auth/activate-account` cargan sin 404 y no muestran la sidebar del feed.
+- [x] `/auth/login` replica el mockup en desktop: panel coral con degradado, logo, titular, descripción, "🌿 Guardería Sala Soles", título "Iniciar sesión", subtítulo, labels `EMAIL`/`CONTRASEÑA`, placeholder de password `••••••••`, CTA gradiente y pie "¿Te invitó la guardería? Activá tu cuenta".
+- [x] El input email de `/auth/login` aparece vacío con placeholder `tu@email.com`.
+- [x] No existen en el DOM el label "INGRESO COMO" ni los botones "Personal"/"Familia" (omitidos según el pedido).
+- [x] `/auth/activate-account` replica el mockup en desktop: "Bienvenida a OpenDayCare", texto de invitación, tarjeta con "M" / "Te invitaron a seguir a" / "Mateo · Sala Soles", código `7K4P9`, email `lucia.fernandez@gmail.com`, password enmascarado con valor `contraseña`, CTA "Activar mi cuenta" y pie "¿Ya tenés cuenta? Iniciar sesión".
+- [x] El checkbox de autorización aparece marcado y con el texto exacto del mockup.
+- [x] Todos los `<a>` de ambas pantallas tienen `href="#"` y no hay handlers de navegación ni de envío.
+- [x] No hay `useState`, `onSubmit`, `fetch` ni peticiones de red en `features/auth/` ni en las rutas `/auth`.
+- [x] No hay `<link>` manual a Google Fonts: Fredoka y Nunito siguen cargándose desde `app/layout.tsx`.
+- [x] A 375px no hay scroll horizontal: en login el panel coral va arriba del formulario y en activate-account el contenido queda centrado.
 
 ## Decisions
 
