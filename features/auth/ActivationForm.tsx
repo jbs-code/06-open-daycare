@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { CheckIcon, SunIcon } from "@/components/icons";
 import { ActivationInviteCard } from "@/features/auth/ActivationInviteCard";
 
@@ -69,18 +71,18 @@ export function ActivationForm() {
         </span>
       </label>
 
-      <a
+      <Link
         href="#"
         className="block w-full rounded-[15px] bg-[linear-gradient(180deg,#F4977E,#EE8164)] p-[15px] text-center text-[16px] font-extrabold text-white shadow-[0_10px_22px_-8px_rgba(238,129,100,0.7)]"
       >
         Activar mi cuenta
-      </a>
+      </Link>
 
       <p className="mt-[22px] text-center text-[14.5px] text-muted-strong">
         ¿Ya tenés cuenta?{" "}
-        <a href="#" className="font-extrabold text-coral-strong">
+        <Link href="#" className="font-extrabold text-coral-strong">
           Iniciar sesión
-        </a>
+        </Link>
       </p>
     </div>
   );

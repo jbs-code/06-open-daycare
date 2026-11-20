@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+
 import { MenuIcon, SunIcon } from "@/components/icons";
 import type { CurrentUser } from "@/lib/mockData";
 import { SidebarContent } from "./SidebarContent";
@@ -22,14 +24,14 @@ export function MobileSidebar({ user }: { user: CurrentUser }) {
         >
           <MenuIcon className="size-6" />
         </button>
-        <a href="#" className="flex items-center gap-2.5">
+        <Link href="#" className="flex items-center gap-2.5">
           <span className="flex size-8 flex-none items-center justify-center rounded-lg bg-[linear-gradient(155deg,#F8C3A8,#F2937A)]">
             <SunIcon className="size-[18px] text-white" />
           </span>
           <span className="font-fredoka text-[16px] font-semibold text-foreground">
             OpenDayCare
           </span>
-        </a>
+        </Link>
       </header>
 
       {/* Overlay: cierra el drawer al tocarlo */}

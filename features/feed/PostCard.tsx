@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { CommentIcon, HeartIcon, ImageIcon, MegaphoneIcon } from "@/components/icons";
 import type { FeedPost } from "@/lib/mockData";
 import { POST_KIND_BADGE_CLASSES, POST_KIND_LABELS } from "@/lib/postKinds";
@@ -38,13 +40,13 @@ function PostBadge({ kind }: { kind: FeedPost["kind"] }) {
 
 function PostPhoto({ label }: { label: string }) {
   return (
-    <a
+    <Link
       href="#"
       className="mt-3.5 flex h-[200px] flex-col items-center justify-center gap-2 rounded-2xl border-[1.5px] border-dashed border-photo-border bg-surface-sunken text-photo-ink"
     >
       <ImageIcon className="size-[30px]" />
       <span className="text-[13.5px]">{label}</span>
-    </a>
+    </Link>
   );
 }
 
@@ -55,16 +57,16 @@ function PostFooter({ post }: { post: FeedPost }) {
         <HeartIcon className="size-[19px]" />
         {post.likes}
       </span>
-      <a
+      <Link
         href="#"
         className="flex items-center gap-[7px] text-sm font-bold text-muted-strong"
       >
         <CommentIcon className="size-[18px]" />
         {post.comments}
-      </a>
-      <a href="#" className="ml-auto text-sm font-extrabold text-coral-strong">
+      </Link>
+      <Link href="#" className="ml-auto text-sm font-extrabold text-coral-strong">
         Editar
-      </a>
+      </Link>
     </div>
   );
 }

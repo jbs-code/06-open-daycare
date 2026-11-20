@@ -51,7 +51,7 @@ Los campos precargados se escriben con `defaultValue` y el checkbox con `default
 - [x] No existen en el DOM el label "INGRESO COMO" ni los botones "Personal"/"Familia" (omitidos según el pedido).
 - [x] `/auth/activate-account` replica el mockup en desktop: "Bienvenida a OpenDayCare", texto de invitación, tarjeta con "M" / "Te invitaron a seguir a" / "Mateo · Sala Soles", código `7K4P9`, email `lucia.fernandez@gmail.com`, password enmascarado con valor `contraseña`, CTA "Activar mi cuenta" y pie "¿Ya tenés cuenta? Iniciar sesión".
 - [x] El checkbox de autorización aparece marcado y con el texto exacto del mockup.
-- [x] Todos los `<a>` de ambas pantallas tienen `href="#"` y no hay handlers de navegación ni de envío.
+- [x] Todos los enlaces de ambas pantallas tienen `href="#"` y no hay handlers de navegación ni de envío.
 - [x] No hay `useState`, `onSubmit`, `fetch` ni peticiones de red en `features/auth/` ni en las rutas `/auth`.
 - [x] No hay `<link>` manual a Google Fonts: Fredoka y Nunito siguen cargándose desde `app/layout.tsx`.
 - [x] A 375px no hay scroll horizontal: en login el panel coral va arriba del formulario y en activate-account el contenido queda centrado.
