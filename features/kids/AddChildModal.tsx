@@ -1,10 +1,77 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { ChevronDownIcon } from "@/components/icons";
 
 const ROOM_OPTIONS = ["Soles", "Lunas", "Estrellas"] as const;
+type Room = (typeof ROOM_OPTIONS)[number];
+
+interface AddChildForm {
+  fullName: string;
+  birthDate: string;
+  room: Room | "";
+  allergies: string;
+  medicalNotes: string;
+}
+
+type RequiredField = "fullName" | "birthDate" | "room";
+type FieldErrors = Partial<Record<RequiredField, string>>;
+
+const INITIAL_FORM: AddChildForm = {
+  fullName: "",
+  birthDate: "",
+  room: "Soles",
+  allergies: "",
+  medicalNotes: "",
+};
+
+function isLeapYear(year: number): boolean {
+  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+}
+
+function getDaysInMonth(month: number, year: number): number {
+  if (month === 2) return isLeapYear(year) ? 29 : 28;
+  if ([4, 6, 9, 11].includes(month)) return 30;
+  return 31;
+}
+
+function isValidDate(value: string): boolean {
+  const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value);
+  if (!match) return false;
+
+  const day = Number(match[1]);
+  const month = Number(match[2]);
+  const year = Number(match[3]);
+
+  if (month < 1 || month > 12) return false;
+  if (day < 1 || day > getDaysInMonth(month, year)) return false;
+
+  return true;
+}
+
+function validateField(
+  field: RequiredField,
+  form: AddChildForm,
+): string | undefined {
+  if (field === "fullName") {
+    if (!form.fullName.trim()) return "Ingresá el nombre completo.";
+    return undefined;
+  }
+
+  if (field === "birthDate") {
+    if (!form.birthDate.trim()) return "Ingresá la fecha de nacimiento.";
+    if (!isValidDate(form.birthDate)) return "Ingresá una fecha válida (dd/mm/aaaa).";
+    return undefined;
+  }
+
+  if (field === "room") {
+    if (!form.room) return "Seleccioná una sala.";
+    return undefined;
+  }
+
+  return undefined;
+}
 
 interface AddChildModalProps {
   open: boolean;
@@ -12,7 +79,22 @@ interface AddChildModalProps {
 }
 
 export function AddChildModal({ open, onClose }: AddChildModalProps) {
+  const [form, setForm] = useState<AddChildForm>(INITIAL_FORM);
+  const [errors, setErrors] = useState<FieldErrors>({});
+
   const nameInputRef = useRef<HTMLInputElement>(null);
+  const birthDateInputRef = useRef<HTMLInputElement>(null);
+  const roomSelectRef = useRef<HTMLSelectElement>(null);
+
+  const resetForm = useCallback(() => {
+    setForm(INITIAL_FORM);
+    setErrors({});
+  }, []);
+
+  const closeAndReset = useCallback(() => {
+    resetForm();
+    onClose();
+  }, [onClose, resetForm]);
 
   useEffect(() => {
     if (!open) return;
@@ -24,7 +106,7 @@ export function AddChildModal({ open, onClose }: AddChildModalProps) {
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        onClose();
+        closeAndReset();
       }
     };
 
@@ -34,15 +116,62 @@ export function AddChildModal({ open, onClose }: AddChildModalProps) {
       window.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = previousOverflow;
     };
-  }, [open, onClose]);
+  }, [open, closeAndReset]);
 
   if (!open) return null;
 
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) {
-      onClose();
+      closeAndReset();
     }
   };
+
+  const handleBlur = (field: RequiredField) => {
+    const error = validateField(field, form);
+    setErrors((prev) => ({ ...prev, [field]: error }));
+  };
+
+  const handleFieldChange = (field: keyof AddChildForm, value: string) => {
+    const nextForm = { ...form, [field]: value } as AddChildForm;
+    setForm(nextForm);
+
+    if (field === "fullName" || field === "birthDate" || field === "room") {
+      setErrors((prev) => {
+        if (!prev[field]) return prev;
+        return { ...prev, [field]: validateField(field, nextForm) };
+      });
+    }
+  };
+
+  const handleSave = () => {
+    const nextErrors: FieldErrors = {
+      fullName: validateField("fullName", form),
+      birthDate: validateField("birthDate", form),
+      room: validateField("room", form),
+    };
+
+    setErrors(nextErrors);
+
+    const firstInvalidField = ([
+      "fullName",
+      "birthDate",
+      "room",
+    ] as RequiredField[]).find((field) => nextErrors[field]);
+
+    if (firstInvalidField) {
+      if (firstInvalidField === "fullName") nameInputRef.current?.focus();
+      if (firstInvalidField === "birthDate") birthDateInputRef.current?.focus();
+      if (firstInvalidField === "room") roomSelectRef.current?.focus();
+      return;
+    }
+
+    closeAndReset();
+  };
+
+  const inputClassName = (hasError: boolean) =>
+    `w-full rounded-[14px] border-[1.5px] bg-white px-4 py-[13px] text-[15px] text-foreground outline-none placeholder:text-placeholder ${
+      hasError ? "border-coral-deep" : "border-field-border"
+    }`;
 
   return (
     <div
@@ -58,7 +187,7 @@ export function AddChildModal({ open, onClose }: AddChildModalProps) {
         <div className="flex items-center justify-between border-b border-border px-[26px] py-5">
           <button
             type="button"
-            onClick={onClose}
+            onClick={closeAndReset}
             className="text-[15px] font-bold text-muted-strong"
           >
             Cancelar
@@ -71,6 +200,7 @@ export function AddChildModal({ open, onClose }: AddChildModalProps) {
           </span>
           <button
             type="button"
+            onClick={handleSave}
             className="text-[15px] font-extrabold text-coral-deep"
           >
             Guardar
@@ -89,8 +219,16 @@ export function AddChildModal({ open, onClose }: AddChildModalProps) {
               ref={nameInputRef}
               id="child-full-name"
               placeholder="Ej. Martina López"
-              className="w-full rounded-[14px] border-[1.5px] border-field-border bg-white px-4 py-[13px] text-[15px] text-foreground outline-none placeholder:text-placeholder"
+              value={form.fullName}
+              onChange={(event) => handleFieldChange("fullName", event.target.value)}
+              onBlur={() => handleBlur("fullName")}
+              className={inputClassName(Boolean(errors.fullName))}
             />
+            {errors.fullName ? (
+              <p className="mt-2 text-[13px] font-semibold text-coral-deep">
+                {errors.fullName}
+              </p>
+            ) : null}
           </div>
 
           <div className="mb-[18px] flex gap-[14px]">
@@ -102,10 +240,21 @@ export function AddChildModal({ open, onClose }: AddChildModalProps) {
                 FECHA DE NACIMIENTO
               </label>
               <input
+                ref={birthDateInputRef}
                 id="child-birth-date"
                 placeholder="dd/mm/aaaa"
-                className="w-full rounded-[14px] border-[1.5px] border-field-border bg-white px-4 py-[13px] text-[15px] text-foreground outline-none placeholder:text-placeholder"
+                value={form.birthDate}
+                onChange={(event) =>
+                  handleFieldChange("birthDate", event.target.value)
+                }
+                onBlur={() => handleBlur("birthDate")}
+                className={inputClassName(Boolean(errors.birthDate))}
               />
+              {errors.birthDate ? (
+                <p className="mt-2 text-[13px] font-semibold text-coral-deep">
+                  {errors.birthDate}
+                </p>
+              ) : null}
             </div>
             <div className="flex-1">
               <label
@@ -116,9 +265,14 @@ export function AddChildModal({ open, onClose }: AddChildModalProps) {
               </label>
               <div className="relative">
                 <select
+                  ref={roomSelectRef}
                   id="child-room"
-                  defaultValue="Soles"
-                  className="w-full appearance-none rounded-[14px] border-[1.5px] border-field-border bg-white px-4 py-[13px] pr-10 text-[15px] font-bold text-foreground outline-none"
+                  value={form.room}
+                  onChange={(event) =>
+                    handleFieldChange("room", event.target.value)
+                  }
+                  onBlur={() => handleBlur("room")}
+                  className={`${inputClassName(Boolean(errors.room))} appearance-none pr-10 font-bold`}
                 >
                   {ROOM_OPTIONS.map((room) => (
                     <option key={room} value={room}>
@@ -128,6 +282,11 @@ export function AddChildModal({ open, onClose }: AddChildModalProps) {
                 </select>
                 <ChevronDownIcon className="pointer-events-none absolute right-4 top-1/2 size-4 -translate-y-1/2 text-[#B0A290]" />
               </div>
+              {errors.room ? (
+                <p className="mt-2 text-[13px] font-semibold text-coral-deep">
+                  {errors.room}
+                </p>
+              ) : null}
             </div>
           </div>
 
@@ -141,7 +300,11 @@ export function AddChildModal({ open, onClose }: AddChildModalProps) {
             <input
               id="child-allergies"
               placeholder="Ej. Maní, Lactosa"
-              className="w-full rounded-[14px] border-[1.5px] border-field-border bg-white px-4 py-[13px] text-[15px] text-foreground outline-none placeholder:text-placeholder"
+              value={form.allergies}
+              onChange={(event) =>
+                handleFieldChange("allergies", event.target.value)
+              }
+              className={inputClassName(false)}
             />
           </div>
 
@@ -155,7 +318,11 @@ export function AddChildModal({ open, onClose }: AddChildModalProps) {
             <textarea
               id="child-medical-notes"
               placeholder="Indicaciones, medicación, contactos…"
-              className="min-h-[90px] w-full resize-y rounded-[14px] border-[1.5px] border-field-border bg-white px-4 py-[13px] text-[15px] leading-[1.5] text-foreground outline-none placeholder:text-placeholder"
+              value={form.medicalNotes}
+              onChange={(event) =>
+                handleFieldChange("medicalNotes", event.target.value)
+              }
+              className={`${inputClassName(false)} min-h-[90px] resize-y leading-[1.5]`}
             />
           </div>
         </div>
