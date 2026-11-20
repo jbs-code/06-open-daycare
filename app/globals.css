@@ -59,6 +59,9 @@
   --color-consent-bg: #fbf1d6;
   --color-consent-ink: #8a7234;
   --color-consent-check: #5fb97e;
+
+  /* Modal */
+  --color-modal-backdrop: rgba(63, 54, 46, 0.45);
 }
 
 /*
