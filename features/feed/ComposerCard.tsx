@@ -1,8 +1,10 @@
+import Link from "next/link";
+
 import { CameraIcon } from "@/components/icons";
 
 export function ComposerCard({ initial }: { initial: string }) {
   return (
-    <a
+    <Link
       href="#"
       className="mb-6 flex items-center gap-3.5 rounded-[18px] border border-border bg-surface px-[18px] py-3.5 shadow-[0_4px_14px_-10px_rgba(120,90,60,0.4)]"
     >
@@ -13,6 +15,6 @@ export function ComposerCard({ initial }: { initial: string }) {
       <span className="flex size-[38px] items-center justify-center rounded-xl bg-coral-soft text-coral">
         <CameraIcon className="size-[19px]" />
       </span>
-    </a>
+    </Link>
   );
 }

@@ -45,7 +45,7 @@ export function SidebarContent({ user, onNavigate }: SidebarContentProps) {
 
   return (
     <>
-      <a href="#" onClick={onNavigate} className="flex items-center gap-[11px] px-2 pt-1 pb-[22px]">
+      <Link href="#" onClick={onNavigate} className="flex items-center gap-[11px] px-2 pt-1 pb-[22px]">
         <span className="flex size-[38px] flex-none items-center justify-center rounded-xl bg-[linear-gradient(155deg,#F8C3A8,#F2937A)]">
           <SunIcon className="size-[21px] text-white" />
         </span>
@@ -57,16 +57,16 @@ export function SidebarContent({ user, onNavigate }: SidebarContentProps) {
             {user.roomName}
           </span>
         </span>
-      </a>
+      </Link>
 
-      <a
+      <Link
         href="#"
         onClick={onNavigate}
         className="mb-[18px] flex w-full items-center justify-center gap-2 rounded-[14px] bg-[linear-gradient(180deg,#F4977E,#EE8164)] p-3 text-[14.5px] font-extrabold text-white shadow-[0_8px_18px_-8px_rgba(238,129,100,0.75)]"
       >
         <PlusIcon className="size-[17px]" />
         Nueva publicación
-      </a>
+      </Link>
 
       <nav className="flex flex-1 flex-col gap-1">
         {NAV_ITEMS.map(({ label, Icon, href }) => {
@@ -83,12 +83,8 @@ export function SidebarContent({ user, onNavigate }: SidebarContentProps) {
             </>
           );
 
-          // Rutas reales navegan en SPA; los placeholders siguen en <a>
-          return href === "#" ? (
-            <a key={label} href={href} onClick={onNavigate} className={className}>
-              {content}
-            </a>
-          ) : (
+          // Los placeholders con href="#" no tienen pantalla propia (SPEC 01)
+          return (
             <Link key={label} href={href} onClick={onNavigate} className={className}>
               {content}
             </Link>
@@ -107,14 +103,14 @@ export function SidebarContent({ user, onNavigate }: SidebarContentProps) {
             </span>
             <span className="block text-xs text-muted">{user.role}</span>
           </span>
-          <a
+          <Link
             href="#"
             onClick={onNavigate}
             title="Cerrar sesión"
             className="flex size-8 flex-none items-center justify-center rounded-[10px] bg-page text-muted-strong"
           >
             <LogoutIcon className="size-4" />
-          </a>
+          </Link>
         </div>
       </div>
     </>

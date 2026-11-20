@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import type { Child } from "@/lib/children";
 
 // Cabecera del perfil: avatar 84px + nombre + botón "Editar"
@@ -18,12 +20,12 @@ export function ChildProfileHeader({ child }: { child: Child }) {
           {child.ageYears} años · Sala {child.roomName}
         </p>
       </span>
-      <a
+      <Link
         href="#"
         className="flex-none rounded-xl border-[1.5px] border-border bg-surface px-4 py-[9px] text-sm font-bold text-nav"
       >
         Editar
-      </a>
+      </Link>
     </div>
   );
 }
