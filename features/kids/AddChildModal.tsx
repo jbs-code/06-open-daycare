@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+
 import { ChevronDownIcon } from "@/components/icons";
 
 const ROOM_OPTIONS = ["Soles", "Lunas", "Estrellas"] as const;
@@ -10,10 +12,43 @@ interface AddChildModalProps {
 }
 
 export function AddChildModal({ open, onClose }: AddChildModalProps) {
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    nameInputRef.current?.focus();
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open, onClose]);
+
   if (!open) return null;
 
+  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-modal-backdrop px-6 py-10">
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-modal-backdrop px-6 py-10"
+      onMouseDown={handleBackdropClick}
+    >
       <div
         role="dialog"
         aria-modal="true"
@@ -23,6 +58,7 @@ export function AddChildModal({ open, onClose }: AddChildModalProps) {
         <div className="flex items-center justify-between border-b border-border px-[26px] py-5">
           <button
             type="button"
+            onClick={onClose}
             className="text-[15px] font-bold text-muted-strong"
           >
             Cancelar
@@ -50,6 +86,7 @@ export function AddChildModal({ open, onClose }: AddChildModalProps) {
               NOMBRE COMPLETO
             </label>
             <input
+              ref={nameInputRef}
               id="child-full-name"
               placeholder="Ej. Martina López"
               className="w-full rounded-[14px] border-[1.5px] border-field-border bg-white px-4 py-[13px] text-[15px] text-foreground outline-none placeholder:text-placeholder"
