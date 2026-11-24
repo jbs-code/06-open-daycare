@@ -23,6 +23,6 @@ jobs:
           persist-credentials: false
 
       - name: Run OpenCode
-        uses: anomalyco/opencode/github@latest
+        uses: anomalyco/opencode/github@v1.19.6
         with:
           model: opencode/big-pickle
