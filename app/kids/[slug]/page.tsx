@@ -54,13 +54,13 @@ export default async function ChildProfilePage({
             </div>
 
             <div className="flex w-full flex-none flex-col gap-[14px] sm:w-[300px]">
-              <a
+              <Link
                 href="#"
                 className="flex w-full items-center justify-center gap-[9px] rounded-[14px] bg-foreground p-[13px] text-[15px] font-extrabold text-white"
               >
                 <SunIcon className="size-[18px]" />
                 Resumen del día
-              </a>
+              </Link>
               <ParentsCard parents={child.parents} />
             </div>
           </div>

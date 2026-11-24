@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { PlusIcon } from "@/components/icons";
 import type { Parent, ParentStatus } from "@/lib/children";
 
@@ -48,14 +50,14 @@ export function ParentsCard({ parents }: { parents: Parent[] }) {
             </span>
           </div>
         ))}
-        <a href="#" className="flex items-center gap-3 pt-2">
+        <Link href="#" className="flex items-center gap-3 pt-2">
           <span className="flex size-10 flex-none items-center justify-center rounded-full border-[1.5px] border-dashed border-[#D8CBBA] text-[#B0A290]">
             <PlusIcon className="size-[18px]" />
           </span>
           <span className="text-[14.5px] font-extrabold text-coral-strong">
             Vincular otro padre
           </span>
-        </a>
+        </Link>
       </div>
     </div>
   );
