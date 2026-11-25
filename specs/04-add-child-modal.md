@@ -1,6 +1,6 @@
 # SPEC 04 — Modal "Agregar niño" en `/kids`
 
-> **Status:** Aprobado
+> **Status:** Implementado
 > **Depends on:** SPEC 02
 > **Date:** 2026-11-20
 > **Objective:** Abrir desde `/kids` un modal réplica de `references/pantallas/agregar-nino.dc.html` con validación de nombre, fecha de nacimiento y sala, que al guardar se cierra y limpia sin persistir datos.
@@ -56,29 +56,29 @@ Helper local `isValidDate(value: string): boolean`: regex `^(\d{2})/(\d{2})/(\d{
 1. **Tokens e icono.** `ChevronDownIcon` en `components/icons.tsx` (path `m6 9 6 6 6-6`, stroke `currentColor`) y token `--color-modal-backdrop` en `app/globals.css`. Verificar: `npx tsc --noEmit` sin errores.
 2. **Estructura del modal.** `features/kids/AddChildModal.tsx` con props `open` / `onClose`, markup completo del mockup y backdrop; sin lógica de validación aún. Verificar: render aislado con `open` coincide con `agregar-nino.dc.html`.
 3. **Ciclo de vida.** `useEffect` para `Escape`, clic en backdrop, bloqueo de scroll y foco inicial, con cleanup. Verificar: consola de Playwright sin warnings de React.
-4. **Validación.** Estado del form, `errors`, validación en `blur` y en `Guardar`, borde coral, mensajes y foco al primer inválido. Verificar manual: submit vacío marca 3 campos; `31/02/2024` falla; `29/02/2024` y `15/06/2027` pasan.
+4. **Validación.** Estado del form, `errors`, validación en `blur` y en `Guardar`, borde coral, mensajes y foco al primer inválido. Verificar manual: submit vacío marca nombre y fecha (SALA arranca en `Soles`); `31/02/2024` falla; `29/02/2024` y `15/06/2027` pasan.
 5. **Integración.** `KidsHeader.tsx` pasa a `"use client"` con `useState`; `app/kids/page.tsx` queda intacto como server component. Guardar válido y Cancelar cierran y limpian. Verificar: clic en "Agregar niño" abre el modal y la grilla no se modifica.
 6. **Verificación final.** `npm run build` + `npx tsc --noEmit`; capturas a 1440px y 375px comparadas con el mockup.
 
 ## Acceptance criteria
 
-- [ ] `npm run build` y `npx tsc --noEmit` terminan sin errores.
-- [ ] El botón "Agregar niño" abre el modal sobre `/kids` con backdrop oscuro y la tarjeta centrada.
-- [ ] El modal replica los textos, labels, placeholders, colores y espaciados de `agregar-nino.dc.html`.
-- [ ] SALA es un `<select>` con `Soles` / `Lunas` / `Estrellas`, arranca en `Soles` y muestra chevron abajo.
-- [ ] Guardar con los tres obligatorios vacíos marca los tres con borde coral y mensaje, enfoca el primero y no cierra el modal.
-- [ ] `31/02/2024` y `29/02/2023` se rechazan; `29/02/2024`, `15/06/2027` y `01/01/2000` se aceptan.
-- [ ] Cada error se limpia al corregir su campo, y la validación también corre al perder foco.
-- [ ] Guardar con datos válidos cierra el modal, limpia los cinco campos y deja la grilla en 8 niños.
-- [ ] Cancelar, `Escape` y clic en el backdrop cierran y limpian; el scroll de fondo se libera al cerrar.
-- [ ] Al abrir, el foco queda en "Nombre completo"; el modal tiene `role="dialog"`, `aria-modal="true"` y título asociado.
-- [ ] A 375px no hay scroll horizontal y la tarjeta conserva su padding.
-- [ ] No hay `fetch`, cambios en `lib/children.ts` ni modificación de otras rutas.
+- [x] `npm run build` y `npx tsc --noEmit` terminan sin errores.
+- [x] El botón "Agregar niño" abre el modal sobre `/kids` con backdrop oscuro y la tarjeta centrada.
+- [x] El modal replica los textos, labels, placeholders, colores y espaciados de `agregar-nino.dc.html`.
+- [x] SALA es un `<select>` con `Soles` / `Lunas` / `Estrellas`, arranca en `Soles` y muestra chevron abajo.
+- [x] Guardar con nombre y fecha vacíos marca ambos con borde coral y mensaje, enfoca "Nombre completo" y no cierra el modal; SALA arranca en `Soles` (sin opción vacía) y por eso no genera error.
+- [x] `31/02/2024` y `29/02/2023` se rechazan; `29/02/2024`, `15/06/2027` y `01/01/2000` se aceptan.
+- [x] Cada error se limpia al corregir su campo, y la validación también corre al perder foco.
+- [x] Guardar con datos válidos cierra el modal, limpia los cinco campos y deja la grilla en 8 niños.
+- [x] Cancelar, `Escape` y clic en el backdrop cierran y limpian; el scroll de fondo se libera al cerrar.
+- [x] Al abrir, el foco queda en "Nombre completo"; el modal tiene `role="dialog"`, `aria-modal="true"` y título asociado.
+- [x] A 375px no hay scroll horizontal y la tarjeta conserva su padding.
+- [x] No hay `fetch`, cambios en `lib/children.ts` ni modificación de otras rutas.
 
 ## Decisions
 
 - **Sí:** Guardar cierra y limpia sin tocar la grilla (elegido). Mantiene el perfil estático de SPEC 01–03. **No:** alta en memoria ni estado en `app/kids/page.tsx`.
-- **Sí:** Select con `Soles` / `Lunas` / `Estrellas` (elegido). Da sentido real a la obligatoriedad de sala. **No:** texto fijo "Soles" ni select de una sola opción.
+- **Sí:** Select con `Soles` / `Lunas` / `Estrellas` (elegido). Da sentido real a la obligatoriedad de sala. **No:** texto fijo "Soles" ni select de una sola opción. Al no incluir opción vacía, la validación de SALA es defensiva y no se dispara desde la UI.
 - **Sí:** Fecha como texto `dd/mm/aaaa` con validación de calendario (elegido). Conserva el placeholder del mockup. **No:** `type="date"`, que cambia el render.
 - **Sí:** Fechas futuras válidas (elegido). **No:** comparar contra `Date.now()`.
 - **Sí:** Validar en `blur` y en Guardar (elegido). **No:** solo al guardar.
