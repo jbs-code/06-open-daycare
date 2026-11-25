@@ -1,6 +1,6 @@
 # SPEC 04 — Modal "Agregar niño" en `/kids`
 
-> **Status:** Aprobado
+> **Status:** Implementado
 > **Depends on:** SPEC 02
 > **Date:** 2026-11-20
 > **Objective:** Abrir desde `/kids` un modal réplica de `references/pantallas/agregar-nino.dc.html` con validación de nombre, fecha de nacimiento y sala, que al guardar se cierra y limpia sin persistir datos.
