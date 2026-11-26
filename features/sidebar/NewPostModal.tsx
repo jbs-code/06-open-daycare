@@ -69,6 +69,8 @@ function roomClassName(selected: boolean): string {
 export function NewPostModal({ open, onClose }: NewPostModalProps) {
   const [selectedChildren, setSelectedChildren] = useState<RecipientId[]>([]);
   const [wholeRoom, setWholeRoom] = useState(false);
+  const [selectedType, setSelectedType] = useState<PostType | null>(null);
+  const [description, setDescription] = useState(INITIAL_DESCRIPTION);
 
   const toggleChild = useCallback((id: RecipientId) => {
     setSelectedChildren((prev) =>
@@ -172,16 +174,25 @@ export function NewPostModal({ open, onClose }: NewPostModalProps) {
               aria-labelledby="new-post-types-label"
               className="flex flex-wrap gap-[9px]"
             >
-              {POST_TYPES.map((type) => (
-                <button
-                  key={type}
-                  type="button"
-                  aria-pressed={false}
-                  className={`rounded-full border-none px-4 py-2 text-[13.5px] font-extrabold ${POST_TYPE_COLORS[type]}`}
-                >
-                  {type}
-                </button>
-              ))}
+              {POST_TYPES.map((type) => {
+                const selected = selectedType === type;
+
+                return (
+                  <button
+                    key={type}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => setSelectedType(type)}
+                    className={`rounded-full border-none px-4 py-2 text-[13.5px] font-extrabold ${POST_TYPE_COLORS[type]} ${
+                      selected
+                        ? "ring-2 ring-foreground/70 ring-offset-2 ring-offset-auth-page"
+                        : ""
+                    }`}
+                  >
+                    {type}
+                  </button>
+                );
+              })}
             </div>
           </section>
 
@@ -195,7 +206,8 @@ export function NewPostModal({ open, onClose }: NewPostModalProps) {
             <textarea
               id="new-post-description"
               placeholder="Contá cómo le fue hoy…"
-              defaultValue={INITIAL_DESCRIPTION}
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
               className="min-h-[120px] w-full resize-y rounded-[14px] border-[1.5px] border-field-border bg-white px-4 py-[14px] text-[15px] leading-[1.5] text-foreground outline-none placeholder:text-placeholder"
             />
           </section>
