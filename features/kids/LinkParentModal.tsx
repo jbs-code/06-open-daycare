@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { CloseIcon, InfoIcon, SendIcon } from "@/components/icons";
 
@@ -68,6 +68,12 @@ export function LinkParentModal({
   const nameInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
 
+  const closeAndReset = useCallback(() => {
+    setForm(INITIAL_FORM);
+    setErrors({});
+    onClose();
+  }, [onClose]);
+
   useEffect(() => {
     if (!open) return;
 
@@ -77,7 +83,7 @@ export function LinkParentModal({
     document.body.style.overflow = "hidden";
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") closeAndReset();
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -86,12 +92,12 @@ export function LinkParentModal({
       window.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = previousOverflow;
     };
-  }, [open, onClose]);
+  }, [open, closeAndReset]);
 
   if (!open) return null;
 
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) onClose();
+    if (event.target === event.currentTarget) closeAndReset();
   };
 
   const handleEmailBlur = () => {
@@ -117,7 +123,7 @@ export function LinkParentModal({
       return;
     }
 
-    onClose();
+    closeAndReset();
   };
 
   return (
@@ -144,6 +150,7 @@ export function LinkParentModal({
           <button
             type="button"
             aria-label="Cerrar"
+            onClick={closeAndReset}
             className="flex size-[34px] flex-none items-center justify-center rounded-[10px] bg-border-soft text-muted-strong"
           >
             <CloseIcon className="size-[18px]" />
