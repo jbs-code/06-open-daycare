@@ -61,7 +61,7 @@ export default async function ChildProfilePage({
                 <SunIcon className="size-[18px]" />
                 Resumen del día
               </Link>
-              <ParentsCard parents={child.parents} />
+              <ParentsCard parents={child.parents} childName={child.fullName} />
             </div>
           </div>
         </div>

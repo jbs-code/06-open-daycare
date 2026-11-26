@@ -1,6 +1,9 @@
-import Link from "next/link";
+"use client";
+
+import { useCallback, useState } from "react";
 
 import { PlusIcon } from "@/components/icons";
+import { LinkParentModal } from "@/features/kids/LinkParentModal";
 import type { Parent, ParentStatus } from "@/lib/children";
 
 // Texto secundario del padre según estado (del mockup)
@@ -20,7 +23,17 @@ const BADGE_LABEL: Record<ParentStatus, string> = {
 };
 
 // Tarjeta "PADRES VINCULADOS" de la columna derecha del perfil
-export function ParentsCard({ parents }: { parents: Parent[] }) {
+export function ParentsCard({
+  parents,
+  childName,
+}: {
+  parents: Parent[];
+  childName: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const openModal = useCallback(() => setOpen(true), []);
+  const closeModal = useCallback(() => setOpen(false), []);
+
   return (
     <div className="rounded-2xl border border-border bg-surface px-[18px] py-4">
       <div className="mb-[14px] text-[12.5px] font-extrabold tracking-[0.8px] text-section">
@@ -50,15 +63,24 @@ export function ParentsCard({ parents }: { parents: Parent[] }) {
             </span>
           </div>
         ))}
-        <Link href="#" className="flex items-center gap-3 pt-2">
+        <button
+          type="button"
+          onClick={openModal}
+          className="flex items-center gap-3 pt-2"
+        >
           <span className="flex size-10 flex-none items-center justify-center rounded-full border-[1.5px] border-dashed border-[#D8CBBA] text-[#B0A290]">
             <PlusIcon className="size-[18px]" />
           </span>
           <span className="text-[14.5px] font-extrabold text-coral-strong">
             Vincular otro padre
           </span>
-        </Link>
+        </button>
       </div>
+      <LinkParentModal
+        open={open}
+        onClose={closeModal}
+        childName={childName}
+      />
     </div>
   );
 }
