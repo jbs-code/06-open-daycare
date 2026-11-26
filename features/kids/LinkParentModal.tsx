@@ -259,6 +259,8 @@ export function LinkParentModal({
 
           <button
             type="button"
+            // Evita que el botón robe el foco que handleSubmit devuelve al email
+            onMouseDown={(event) => event.preventDefault()}
             onClick={handleSubmit}
             className="flex w-full items-center justify-center gap-[9px] rounded-[14px] bg-gradient-to-b from-coral-from to-coral-to p-[14px] text-[15.5px] font-extrabold text-white shadow-[0_10px_22px_-8px_rgba(238,129,100,0.7)]"
           >
