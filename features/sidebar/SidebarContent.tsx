@@ -1,6 +1,6 @@
 "use client";
 
-import type { ComponentType } from "react";
+import { useCallback, useState, type ComponentType } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -13,6 +13,8 @@ import {
   UsersIcon,
 } from "@/components/icons";
 import type { CurrentUser } from "@/lib/mockData";
+
+import { NewPostModal } from "./NewPostModal";
 
 interface NavItem {
   label: string;
@@ -42,6 +44,9 @@ interface SidebarContentProps {
 
 export function SidebarContent({ user, onNavigate }: SidebarContentProps) {
   const pathname = usePathname();
+  const [newPostOpen, setNewPostOpen] = useState(false);
+
+  const closeNewPost = useCallback(() => setNewPostOpen(false), []);
 
   return (
     <>
@@ -59,14 +64,14 @@ export function SidebarContent({ user, onNavigate }: SidebarContentProps) {
         </span>
       </Link>
 
-      <Link
-        href="#"
-        onClick={onNavigate}
-        className="mb-[18px] flex w-full items-center justify-center gap-2 rounded-[14px] bg-[linear-gradient(180deg,#F4977E,#EE8164)] p-3 text-[14.5px] font-extrabold text-white shadow-[0_8px_18px_-8px_rgba(238,129,100,0.75)]"
+      <button
+        type="button"
+        onClick={() => setNewPostOpen(true)}
+        className="cursor-pointer mb-[18px] flex w-full items-center justify-center gap-2 rounded-[14px] bg-[linear-gradient(180deg,#F4977E,#EE8164)] p-3 text-[14.5px] font-extrabold text-white shadow-[0_8px_18px_-8px_rgba(238,129,100,0.75)]"
       >
         <PlusIcon className="size-[17px]" />
         Nueva publicación
-      </Link>
+      </button>
 
       <nav className="flex flex-1 flex-col gap-1">
         {NAV_ITEMS.map(({ label, Icon, href }) => {
@@ -113,6 +118,8 @@ export function SidebarContent({ user, onNavigate }: SidebarContentProps) {
           </Link>
         </div>
       </div>
+
+      <NewPostModal open={newPostOpen} onClose={closeNewPost} />
     </>
   );
 }
