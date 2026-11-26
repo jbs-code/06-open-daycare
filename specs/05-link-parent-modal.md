@@ -1,6 +1,6 @@
 # SPEC 05 — Modal "Vincular padre" en `/kids/[slug]`
 
-> **Status:** Aprobado
+> **Status:** Implementado
 > **Depends on:** SPEC 02
 > **Date:** 2026-11-25
 > **Objective:** Abrir desde `ParentsCard` en `/kids/[slug]` un modal réplica de `references/pantallas/vincular-padre.dc.html` con nombre, email y parentesco interactivos, validación exclusiva del email y cierre con limpieza sin persistencia.
@@ -65,18 +65,19 @@ Helper local `isValidEmail(value: string): boolean` con `/^[^\s@]+@[^\s@]+\.[^\s
 
 ## Acceptance criteria
 
-- [ ] `npm run build` y `npx tsc --noEmit` terminan sin errores.
-- [ ] El botón "Vincular otro padre" abre el modal sobre `/kids/[slug]` con backdrop oscuro y tarjeta centrada de `max-w-[480px]`.
-- [ ] El modal replica textos, labels, placeholders, colores, radios y espaciados de `vincular-padre.dc.html`, incluido el banner azul y el código `7K4P9`.
-- [ ] El subtítulo muestra `a {child.fullName}`: "a Mateo Fernández" en Mateo y "a Sofía Méndez" en Sofía.
-- [ ] Nombre y email se pueden escribir; las pills `Mamá` / `Papá` / `Tutor/a` cambian el resaltado al hacer clic y arrancan en `Mamá`.
-- [ ] Email vacío o sin formato válido marca borde coral y mensaje al perder foco y al hacer clic en "Enviar invitación"; enfoca el email y no cierra el modal.
-- [ ] El error del email se limpia al corregirlo; nombre y parentesco nunca muestran error.
-- [ ] "Enviar invitación" con `ana@ejemplo.com` cierra el modal y limpia nombre, email y parentesco; al reabrir todo vuelve a cero.
-- [ ] El botón X, `Escape` y el clic en el backdrop cierran el modal y liberan el scroll del fondo.
-- [ ] Al abrir, el foco queda en "Nombre del padre/madre"; el modal tiene `role="dialog"`, `aria-modal="true"`, título asociado y labels vinculados a sus inputs.
-- [ ] A 375px no hay scroll horizontal y la tarjeta conserva su padding de 24px.
-- [ ] No hay `fetch`, persistencia, código generado ni cambios en la lista de padres de `lib/children.ts`.
+- [x] `npm run build` y `npx tsc --noEmit` terminan sin errores.
+- [x] El botón "Vincular otro padre" abre el modal sobre `/kids/[slug]` con backdrop oscuro y tarjeta centrada de `max-w-[480px]`.
+- [x] El modal replica textos, labels, placeholders, colores, radios y espaciados de `vincular-padre.dc.html`, incluido el banner azul y el código `7K4P9`.
+  - Nota: el texto del banner es fijo según el mockup ("Solo verá el feed de Mateo."); la spec solo dinamiza el subtítulo.
+- [x] El subtítulo muestra `a {child.fullName}`: "a Mateo Fernández" en Mateo y "a Sofía Méndez" en Sofía.
+- [x] Nombre y email se pueden escribir; las pills `Mamá` / `Papá` / `Tutor/a` cambian el resaltado al hacer clic y arrancan en `Mamá`.
+- [x] Email vacío o sin formato válido marca borde coral y mensaje al perder foco y al hacer clic en "Enviar invitación"; enfoca el email y no cierra el modal.
+- [x] El error del email se limpia al corregirlo; nombre y parentesco nunca muestran error.
+- [x] "Enviar invitación" con `ana@ejemplo.com` cierra el modal y limpia nombre, email y parentesco; al reabrir todo vuelve a cero.
+- [x] El botón X, `Escape` y el clic en el backdrop cierran el modal y liberan el scroll del fondo.
+- [x] Al abrir, el foco queda en "Nombre del padre/madre"; el modal tiene `role="dialog"`, `aria-modal="true"`, título asociado y labels vinculados a sus inputs.
+- [x] A 375px no hay scroll horizontal y la tarjeta conserva su padding de 24px.
+- [x] No hay `fetch`, persistencia, código generado ni cambios en la lista de padres de `lib/children.ts`.
 
 ## Decisions
 
