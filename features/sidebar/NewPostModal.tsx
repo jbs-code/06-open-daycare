@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { ImageIcon, PlusIcon } from "@/components/icons";
@@ -48,8 +49,39 @@ interface NewPostModalProps {
   onClose: () => void;
 }
 
+function recipientClassName(selected: boolean): string {
+  return `flex items-center gap-2 rounded-full border-[1.5px] py-[6px] pr-[14px] pl-[6px] text-[14px] font-bold ${
+    selected
+      ? "border-foreground bg-foreground text-white"
+      : "border-border bg-surface text-nav"
+  }`;
+}
+
+function roomClassName(selected: boolean): string {
+  return `rounded-full border-[1.5px] px-4 py-[6px] text-[14px] font-bold ${
+    selected
+      ? "border-foreground bg-foreground text-white"
+      : "border-border bg-surface text-nav"
+  }`;
+}
+
 // Réplica de references/pantallas/crear-publicacion.dc.html
 export function NewPostModal({ open, onClose }: NewPostModalProps) {
+  const [selectedChildren, setSelectedChildren] = useState<RecipientId[]>([]);
+  const [wholeRoom, setWholeRoom] = useState(false);
+
+  const toggleChild = useCallback((id: RecipientId) => {
+    setSelectedChildren((prev) =>
+      prev.includes(id) ? prev.filter((childId) => childId !== id) : [...prev, id],
+    );
+    setWholeRoom(false);
+  }, []);
+
+  const selectWholeRoom = useCallback(() => {
+    setSelectedChildren([]);
+    setWholeRoom(true);
+  }, []);
+
   if (!open || typeof document === "undefined") return null;
 
   return createPortal(
@@ -96,26 +128,32 @@ export function NewPostModal({ open, onClose }: NewPostModalProps) {
               aria-labelledby="new-post-recipients-label"
               className="flex flex-wrap gap-[9px]"
             >
-              {RECIPIENTS.map((recipient) => (
-                <button
-                  key={recipient.id}
-                  type="button"
-                  aria-pressed={false}
-                  className="flex items-center gap-2 rounded-full border-[1.5px] border-border bg-surface py-[6px] pr-[14px] pl-[6px] text-[14px] font-bold text-nav"
-                >
-                  <span
-                    className="flex size-[26px] items-center justify-center rounded-full font-fredoka text-[13px] font-semibold"
-                    style={{ backgroundColor: recipient.bg, color: recipient.ink }}
+              {RECIPIENTS.map((recipient) => {
+                const selected = selectedChildren.includes(recipient.id);
+
+                return (
+                  <button
+                    key={recipient.id}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => toggleChild(recipient.id)}
+                    className={recipientClassName(selected)}
                   >
-                    {recipient.initial}
-                  </span>
-                  {recipient.name}
-                </button>
-              ))}
+                    <span
+                      className="flex size-[26px] items-center justify-center rounded-full font-fredoka text-[13px] font-semibold"
+                      style={{ backgroundColor: recipient.bg, color: recipient.ink }}
+                    >
+                      {recipient.initial}
+                    </span>
+                    {recipient.name}
+                  </button>
+                );
+              })}
               <button
                 type="button"
-                aria-pressed={false}
-                className="rounded-full border-[1.5px] border-border bg-surface px-4 py-[6px] text-[14px] font-bold text-nav"
+                aria-pressed={wholeRoom}
+                onClick={selectWholeRoom}
+                className={roomClassName(wholeRoom)}
               >
                 Toda la sala
               </button>
