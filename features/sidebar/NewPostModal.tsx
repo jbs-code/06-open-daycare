@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { ImageIcon, PlusIcon } from "@/components/icons";
@@ -72,6 +72,36 @@ export function NewPostModal({ open, onClose }: NewPostModalProps) {
   const [selectedType, setSelectedType] = useState<PostType | null>(null);
   const [description, setDescription] = useState(INITIAL_DESCRIPTION);
 
+  const firstRecipientRef = useRef<HTMLButtonElement>(null);
+
+  const closeAndReset = useCallback(() => {
+    setSelectedChildren([]);
+    setWholeRoom(false);
+    setSelectedType(null);
+    setDescription(INITIAL_DESCRIPTION);
+    onClose();
+  }, [onClose]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    firstRecipientRef.current?.focus();
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeAndReset();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open, closeAndReset]);
+
   const toggleChild = useCallback((id: RecipientId) => {
     setSelectedChildren((prev) =>
       prev.includes(id) ? prev.filter((childId) => childId !== id) : [...prev, id],
@@ -86,8 +116,15 @@ export function NewPostModal({ open, onClose }: NewPostModalProps) {
 
   if (!open || typeof document === "undefined") return null;
 
+  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) closeAndReset();
+  };
+
   return createPortal(
-    <div className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-modal-backdrop px-6 py-10">
+    <div
+      className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-modal-backdrop px-6 py-10"
+      onMouseDown={handleBackdropClick}
+    >
       <div
         role="dialog"
         aria-modal="true"
@@ -97,20 +134,20 @@ export function NewPostModal({ open, onClose }: NewPostModalProps) {
         <header className="flex items-center justify-between border-b border-border px-[26px] py-5">
           <button
             type="button"
-            onClick={onClose}
+            onClick={closeAndReset}
             className="text-[15px] font-bold text-muted-strong"
           >
             Cancelar
           </button>
           <h2
             id="new-post-title"
-            className="font-fredoka text-[18px] font-semibold text-foreground"
+            className="whitespace-nowrap font-fredoka text-[18px] font-semibold text-foreground"
           >
             Nueva publicación
           </h2>
           <button
             type="button"
-            onClick={onClose}
+            onClick={closeAndReset}
             className="text-[15px] font-extrabold text-coral-deep"
           >
             Publicar
@@ -130,12 +167,13 @@ export function NewPostModal({ open, onClose }: NewPostModalProps) {
               aria-labelledby="new-post-recipients-label"
               className="flex flex-wrap gap-[9px]"
             >
-              {RECIPIENTS.map((recipient) => {
+              {RECIPIENTS.map((recipient, index) => {
                 const selected = selectedChildren.includes(recipient.id);
 
                 return (
                   <button
                     key={recipient.id}
+                    ref={index === 0 ? firstRecipientRef : undefined}
                     type="button"
                     aria-pressed={selected}
                     onClick={() => toggleChild(recipient.id)}
