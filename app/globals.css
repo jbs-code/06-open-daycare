@@ -68,6 +68,17 @@
   --color-info-banner-ink: #3f5694;
   --color-invite-code-border: #e6d08a;
   --color-invite-code-ink: #a88526;
+
+  /* Modal "Nueva publicación" — extraído de crear-publicacion.dc.html */
+  --color-meal: #9a7b1e;
+  --color-nap: #7b5fc0;
+  --color-nap-soft: #e7dcf6;
+  --color-mood: #c56486;
+  --color-mood-soft: #f9d2de;
+  --color-photo-type: #d9684a;
+  --color-photo-type-soft: #fbd8cc;
+  --color-child-avatar-green: #b9dec4;
+  --color-child-avatar-green-ink: #3e8b62;
 }
 
 /*
