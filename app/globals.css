@@ -62,6 +62,12 @@
 
   /* Modal */
   --color-modal-backdrop: rgba(63, 54, 46, 0.45);
+
+  /* Modal "Vincular padre" — extraído de vincular-padre.dc.html */
+  --color-info-banner: #e3ecfb;
+  --color-info-banner-ink: #3f5694;
+  --color-invite-code-border: #e6d08a;
+  --color-invite-code-ink: #a88526;
 }
 
 /*
