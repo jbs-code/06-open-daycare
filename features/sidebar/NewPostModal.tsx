@@ -1,0 +1,184 @@
+"use client";
+
+import { createPortal } from "react-dom";
+
+import { ImageIcon, PlusIcon } from "@/components/icons";
+
+const RECIPIENTS = [
+  { id: "mateo", name: "Mateo", initial: "M", bg: "#A9D9E8", ink: "#1F7A93" },
+  { id: "sofia", name: "Sofía", initial: "S", bg: "#F4B8CC", ink: "#C44A7A" },
+  {
+    id: "benjamin",
+    name: "Benjamín",
+    initial: "B",
+    bg: "#B9DEC4",
+    ink: "#3E8B62",
+  },
+] as const;
+
+type RecipientId = (typeof RECIPIENTS)[number]["id"];
+
+const POST_TYPES = [
+  "Comida",
+  "Siesta",
+  "Actividad",
+  "Logro",
+  "Ánimo",
+  "Foto",
+  "Anuncio",
+] as const;
+
+type PostType = (typeof POST_TYPES)[number];
+
+const POST_TYPE_COLORS: Record<PostType, string> = {
+  Comida: "bg-meal text-white",
+  Siesta: "bg-nap-soft text-nap",
+  Actividad: "bg-activity text-white",
+  Logro: "bg-achievement-soft text-achievement",
+  Ánimo: "bg-mood-soft text-mood",
+  Foto: "bg-photo-type-soft text-photo-type",
+  Anuncio: "bg-announcement-soft text-announcement",
+};
+
+const INITIAL_DESCRIPTION =
+  "Pintamos con témperas esta mañana. Mateo eligió el azul para todo y se concentró un montón.";
+
+interface NewPostModalProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+// Réplica de references/pantallas/crear-publicacion.dc.html
+export function NewPostModal({ open, onClose }: NewPostModalProps) {
+  if (!open || typeof document === "undefined") return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-modal-backdrop px-6 py-10">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="new-post-title"
+        className="w-full max-w-[580px] overflow-hidden rounded-[24px] border border-border bg-auth-page shadow-[0_20px_50px_-24px_rgba(63,54,46,0.35)]"
+      >
+        <header className="flex items-center justify-between border-b border-border px-[26px] py-5">
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-[15px] font-bold text-muted-strong"
+          >
+            Cancelar
+          </button>
+          <h2
+            id="new-post-title"
+            className="font-fredoka text-[18px] font-semibold text-foreground"
+          >
+            Nueva publicación
+          </h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-[15px] font-extrabold text-coral-deep"
+          >
+            Publicar
+          </button>
+        </header>
+
+        <div className="px-6 py-6 sm:px-[26px]">
+          <section className="mb-[22px]">
+            <div
+              id="new-post-recipients-label"
+              className="mb-[10px] text-[12px] font-extrabold tracking-[0.7px] text-muted-strong"
+            >
+              PARA
+            </div>
+            <div
+              role="group"
+              aria-labelledby="new-post-recipients-label"
+              className="flex flex-wrap gap-[9px]"
+            >
+              {RECIPIENTS.map((recipient) => (
+                <button
+                  key={recipient.id}
+                  type="button"
+                  aria-pressed={false}
+                  className="flex items-center gap-2 rounded-full border-[1.5px] border-border bg-surface py-[6px] pr-[14px] pl-[6px] text-[14px] font-bold text-nav"
+                >
+                  <span
+                    className="flex size-[26px] items-center justify-center rounded-full font-fredoka text-[13px] font-semibold"
+                    style={{ backgroundColor: recipient.bg, color: recipient.ink }}
+                  >
+                    {recipient.initial}
+                  </span>
+                  {recipient.name}
+                </button>
+              ))}
+              <button
+                type="button"
+                aria-pressed={false}
+                className="rounded-full border-[1.5px] border-border bg-surface px-4 py-[6px] text-[14px] font-bold text-nav"
+              >
+                Toda la sala
+              </button>
+            </div>
+          </section>
+
+          <section className="mb-[22px]">
+            <div
+              id="new-post-types-label"
+              className="mb-[10px] text-[12px] font-extrabold tracking-[0.7px] text-muted-strong"
+            >
+              TIPO
+            </div>
+            <div
+              role="group"
+              aria-labelledby="new-post-types-label"
+              className="flex flex-wrap gap-[9px]"
+            >
+              {POST_TYPES.map((type) => (
+                <button
+                  key={type}
+                  type="button"
+                  aria-pressed={false}
+                  className={`rounded-full border-none px-4 py-2 text-[13.5px] font-extrabold ${POST_TYPE_COLORS[type]}`}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="mb-[22px]">
+            <label
+              htmlFor="new-post-description"
+              className="mb-[10px] block text-[12px] font-extrabold tracking-[0.7px] text-muted-strong"
+            >
+              DESCRIPCIÓN
+            </label>
+            <textarea
+              id="new-post-description"
+              placeholder="Contá cómo le fue hoy…"
+              defaultValue={INITIAL_DESCRIPTION}
+              className="min-h-[120px] w-full resize-y rounded-[14px] border-[1.5px] border-field-border bg-white px-4 py-[14px] text-[15px] leading-[1.5] text-foreground outline-none placeholder:text-placeholder"
+            />
+          </section>
+
+          <section>
+            <div className="mb-[10px] text-[12px] font-extrabold tracking-[0.7px] text-muted-strong">
+              FOTOS
+            </div>
+            <div className="flex gap-3">
+              <div className="flex size-24 items-center justify-center rounded-[14px] border border-border bg-surface-sunken text-photo-ink">
+                <ImageIcon className="size-[26px]" />
+              </div>
+              <div className="flex size-24 flex-col items-center justify-center gap-[6px] rounded-[14px] border-[1.5px] border-dashed border-photo-border bg-surface-sunken text-photo-ink">
+                <PlusIcon className="size-[22px] text-coral-strong" />
+                <span className="text-[12px]">Agregar</span>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>,
+    document.body,
+  );
+}
