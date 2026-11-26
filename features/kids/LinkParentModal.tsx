@@ -1,10 +1,8 @@
 "use client";
 
-import {
-  CloseIcon,
-  InfoIcon,
-  SendIcon,
-} from "@/components/icons";
+import { useEffect, useRef } from "react";
+
+import { CloseIcon, InfoIcon, SendIcon } from "@/components/icons";
 
 const PARENT_RELATIONS = ["Mamá", "Papá", "Tutor/a"] as const;
 type ParentRelation = (typeof PARENT_RELATIONS)[number];
@@ -30,12 +28,42 @@ function pillClassName(relation: ParentRelation): string {
 // Réplica de references/pantallas/vincular-padre.dc.html
 export function LinkParentModal({
   open,
+  onClose,
   childName,
 }: LinkParentModalProps) {
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    nameInputRef.current?.focus();
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open, onClose]);
+
   if (!open) return null;
 
+  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) onClose();
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-modal-backdrop px-6 py-10">
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-modal-backdrop px-6 py-10"
+      onMouseDown={handleBackdropClick}
+    >
       <div
         role="dialog"
         aria-modal="true"
@@ -78,6 +106,7 @@ export function LinkParentModal({
               NOMBRE DEL PADRE/MADRE
             </label>
             <input
+              ref={nameInputRef}
               id="link-parent-full-name"
               type="text"
               placeholder="Ej. Diego Fernández"
