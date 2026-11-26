@@ -1,6 +1,6 @@
 # SPEC 06 — Modal "Nueva publicación" desde el sidebar
 
-> **Status:** Aprobado
+> **Status:** Implementado
 > **Depends on:** SPEC 01
 > **Date:** 2026-11-25
 > **Objective:** Abrir desde el botón "Nueva publicación" del sidebar un modal réplica de `references/pantallas/crear-publicacion.dc.html` con PARA multi-selección excluyente, TIPO y descripción interactivos, sin lógica de publicación ni persistencia.
@@ -66,16 +66,16 @@ Estado local: `selectedChildren: RecipientId[]` (`[]`), `wholeRoom: boolean` (`f
 
 ## Acceptance criteria
 
-- [ ] `npm run build` y `npx tsc --noEmit` terminan sin errores.
-- [ ] El botón "Nueva publicación" abre el modal desde `/` y desde el drawer móvil; el modal queda por encima del drawer y es interactivo.
-- [ ] El modal replica textos, labels, colores, radios y espaciados de `crear-publicacion.dc.html` a 1440px y 375px, sin scroll horizontal.
-- [ ] PARA arranca sin selección; se pueden seleccionar y deseleccionar varios niños a la vez.
-- [ ] "Toda la sala" resalta y elimina cualquier niño seleccionado; elegir un niño desactiva "Toda la sala".
-- [ ] TIPO arranca sin selección, resalta una sola pill por vez y no modifica el feed.
-- [ ] La descripción arranca con el texto del mockup y se puede editar; las fotos son decorativas.
-- [ ] Cancelar, Publicar, `Escape` y el clic en el backdrop cierran y resetean selección, tipo y descripción.
-- [ ] El modal tiene `role="dialog"`, `aria-modal="true"`, título asociado, `aria-pressed` en PARA/TIPO y foco inicial en Mateo; el scroll del fondo se libera al cerrar.
-- [ ] No hay `fetch`, persistencia, iconos nuevos ni cambios en `lib/`, en `MobileSidebar.tsx`, en las rutas de auth ni en `/kids`.
+- [x] `npm run build` y `npx tsc --noEmit` terminan sin errores.
+- [x] El botón "Nueva publicación" abre el modal desde `/` y desde el drawer móvil; el modal queda por encima del drawer y es interactivo.
+- [x] El modal replica textos, labels, colores, radios y espaciados de `crear-publicacion.dc.html` a 1440px y 375px (con el padding lateral móvil de 24px definido en Scope), sin scroll horizontal.
+- [x] PARA arranca sin selección; se pueden seleccionar y deseleccionar varios niños a la vez.
+- [x] "Toda la sala" resalta y elimina cualquier niño seleccionado; elegir un niño desactiva "Toda la sala".
+- [x] TIPO arranca sin selección, resalta una sola pill por vez y no modifica el feed.
+- [x] La descripción arranca con el texto del mockup y se puede editar; las fotos son decorativas.
+- [x] Cancelar, Publicar, `Escape` y el clic en el backdrop cierran y resetean selección, tipo y descripción.
+- [x] El modal tiene `role="dialog"`, `aria-modal="true"`, título asociado, `aria-pressed` en PARA/TIPO y foco inicial en Mateo; el scroll del fondo se libera al cerrar.
+- [x] No hay `fetch`, persistencia, iconos nuevos ni cambios en `lib/`, en `MobileSidebar.tsx`, en las rutas de auth ni en `/kids`.
 
 ## Decisions
 
