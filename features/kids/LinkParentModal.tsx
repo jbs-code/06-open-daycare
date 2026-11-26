@@ -1,22 +1,41 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { CloseIcon, InfoIcon, SendIcon } from "@/components/icons";
 
 const PARENT_RELATIONS = ["Mamá", "Papá", "Tutor/a"] as const;
 type ParentRelation = (typeof PARENT_RELATIONS)[number];
 
-const INITIAL_RELATION: ParentRelation = "Mamá";
-
-interface LinkParentModalProps {
-  open: boolean;
-  onClose: () => void;
-  childName: string;
+interface LinkParentForm {
+  fullName: string;
+  email: string;
+  relation: ParentRelation;
 }
 
-function pillClassName(relation: ParentRelation): string {
-  const selected = relation === INITIAL_RELATION;
+type FieldErrors = Partial<Record<"email", string>>;
+
+const INITIAL_FORM: LinkParentForm = {
+  fullName: "",
+  email: "",
+  relation: "Mamá",
+};
+
+function isValidEmail(value: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function validateEmail(value: string): string | undefined {
+  if (!value.trim()) return "Ingresá el correo electrónico.";
+  if (!isValidEmail(value)) return "Ingresá un correo válido.";
+  return undefined;
+}
+
+function pillClassName(
+  relation: ParentRelation,
+  selectedRelation: ParentRelation,
+): string {
+  const selected = relation === selectedRelation;
 
   return `flex-1 rounded-full border-[1.5px] px-3 py-[11px] text-[14px] font-extrabold ${
     selected
@@ -25,13 +44,29 @@ function pillClassName(relation: ParentRelation): string {
   }`;
 }
 
+function inputClassName(hasError: boolean): string {
+  return `w-full rounded-[14px] border-[1.5px] bg-white px-4 py-[13px] text-[15px] text-foreground outline-none placeholder:text-placeholder ${
+    hasError ? "border-coral-deep" : "border-field-border"
+  }`;
+}
+
+interface LinkParentModalProps {
+  open: boolean;
+  onClose: () => void;
+  childName: string;
+}
+
 // Réplica de references/pantallas/vincular-padre.dc.html
 export function LinkParentModal({
   open,
   onClose,
   childName,
 }: LinkParentModalProps) {
+  const [form, setForm] = useState<LinkParentForm>(INITIAL_FORM);
+  const [errors, setErrors] = useState<FieldErrors>({});
+
   const nameInputRef = useRef<HTMLInputElement>(null);
+  const emailInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -57,6 +92,32 @@ export function LinkParentModal({
 
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) onClose();
+  };
+
+  const handleEmailBlur = () => {
+    setErrors({ email: validateEmail(form.email) });
+  };
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const email = event.target.value;
+    setForm((prev) => ({ ...prev, email }));
+
+    setErrors((prev) => {
+      if (!prev.email) return prev;
+      return { ...prev, email: validateEmail(email) };
+    });
+  };
+
+  const handleSubmit = () => {
+    const emailError = validateEmail(form.email);
+    setErrors({ email: emailError });
+
+    if (emailError) {
+      emailInputRef.current?.focus();
+      return;
+    }
+
+    onClose();
   };
 
   return (
@@ -110,7 +171,11 @@ export function LinkParentModal({
               id="link-parent-full-name"
               type="text"
               placeholder="Ej. Diego Fernández"
-              className="w-full rounded-[14px] border-[1.5px] border-field-border bg-white px-4 py-[13px] text-[15px] text-foreground outline-none placeholder:text-placeholder"
+              value={form.fullName}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, fullName: event.target.value }))
+              }
+              className={inputClassName(false)}
             />
           </div>
 
@@ -122,11 +187,27 @@ export function LinkParentModal({
               EMAIL
             </label>
             <input
+              ref={emailInputRef}
               id="link-parent-email"
               type="email"
               placeholder="correo@ejemplo.com"
-              className="w-full rounded-[14px] border-[1.5px] border-field-border bg-white px-4 py-[13px] text-[15px] text-foreground outline-none placeholder:text-placeholder"
+              value={form.email}
+              onChange={handleEmailChange}
+              onBlur={handleEmailBlur}
+              aria-invalid={Boolean(errors.email)}
+              aria-describedby={
+                errors.email ? "link-parent-email-error" : undefined
+              }
+              className={inputClassName(Boolean(errors.email))}
             />
+            {errors.email ? (
+              <p
+                id="link-parent-email-error"
+                className="mt-2 text-[13px] font-semibold text-coral-deep"
+              >
+                {errors.email}
+              </p>
+            ) : null}
           </div>
 
           <div className="mb-5">
@@ -145,8 +226,11 @@ export function LinkParentModal({
                 <button
                   key={relation}
                   type="button"
-                  aria-pressed={relation === INITIAL_RELATION}
-                  className={pillClassName(relation)}
+                  aria-pressed={relation === form.relation}
+                  onClick={() =>
+                    setForm((prev) => ({ ...prev, relation }))
+                  }
+                  className={pillClassName(relation, form.relation)}
                 >
                   {relation}
                 </button>
@@ -168,6 +252,7 @@ export function LinkParentModal({
 
           <button
             type="button"
+            onClick={handleSubmit}
             className="flex w-full items-center justify-center gap-[9px] rounded-[14px] bg-gradient-to-b from-coral-from to-coral-to p-[14px] text-[15.5px] font-extrabold text-white shadow-[0_10px_22px_-8px_rgba(238,129,100,0.7)]"
           >
             <SendIcon className="size-[19px]" />
